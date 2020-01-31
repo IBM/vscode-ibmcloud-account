@@ -24,6 +24,17 @@ export class CloudAccount extends EventEmitter {
      */
     constructor(private store: CloudAccountStore) {
         super();
+        setInterval(async () => {
+            try {
+                const loggedIn = await this.loggedIn();
+                if (loggedIn) {
+                    console.log('checking tokens');
+                    await this.checkTokens();
+                }
+            } catch {
+
+            }
+        }, 60 * 1000);
     }
 
     /**
@@ -180,11 +191,7 @@ export class CloudAccount extends EventEmitter {
             if (accountRequired && !accountSelected) {
                 throw new Error('You have not selected an IBM Cloud account to use');
             }
-            const now = Math.round((new Date()).getTime() / 1000);
-            const delta = this.expiration - now;
-            if (delta < 30) {
-                await this.refreshTokens();
-            }
+            await this.checkTokens();
             return this.accessToken!;
         } finally {
             this.emit('changed');
@@ -206,11 +213,7 @@ export class CloudAccount extends EventEmitter {
             if (accountRequired && !accountSelected) {
                 throw new Error('You have not selected an IBM Cloud account to use');
             }
-            const now = Math.round((new Date()).getTime() / 1000);
-            const delta = this.expiration - now;
-            if (delta < 30) {
-                await this.refreshTokens();
-            }
+            await this.checkTokens();
             return this.store.getRefreshToken();
         } finally {
             this.emit('changed');
@@ -276,6 +279,14 @@ export class CloudAccount extends EventEmitter {
             await this.store.deleteEmail();
         }
         await this.store.setRefreshToken(refreshToken);
+    }
+
+    private async checkTokens() {
+        const now = Math.round((new Date()).getTime() / 1000);
+        const delta = this.expiration - now;
+        if (delta < 60) {
+            await this.refreshTokens();
+        }
     }
 
     private async refreshTokens() {

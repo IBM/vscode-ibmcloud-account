@@ -37,7 +37,7 @@ Next, access this extensions API from within your extension:
 const cloudAccount: CloudAccountApi = vscode.extensions.getExtension<CloudAccountApi>('IBM.ibmcloud-account')!.exports;
 ```
 
-The `CloudAccountApi` type is defined in [extension.d.ts](./src/extension.d.ts). You should copy this file into your extension and reference it from there.
+The `CloudAccountApi` type is defined in [cloud-account-api.d.ts](./src/cloud-account-api.d.ts). You should copy this file into your extension and reference it from there.
 
 Finally, you can use the `CloudAccountApi` object to interact with IBM Cloud services, and access information about the logged in use:
 
