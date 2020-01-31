@@ -9,9 +9,37 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [],
+	"activationEvents": [
+		"onCommand:ibmcloud-account.createAccount",
+		"onCommand:ibmcloud-account.login",
+		"onCommand:ibmcloud-account.logout",
+		"onCommand:ibmcloud-account.selectAccount"
+	],
 	"main": "./out/extension.js",
-	"contributes": {},
+	"contributes": {
+		"commands": [
+			{
+				"command": "ibmcloud-account.createAccount",
+				"title": "Create an account",
+				"category": "IBM Cloud"
+			},
+			{
+				"command": "ibmcloud-account.login",
+				"title": "Log in",
+				"category": "IBM Cloud"
+			},
+			{
+				"command": "ibmcloud-account.logout",
+				"title": "Log out",
+				"category": "IBM Cloud"
+			},
+			{
+				"command": "ibmcloud-account.selectAccount",
+				"title": "Select account",
+				"category": "IBM Cloud"
+			}
+		]
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
@@ -23,11 +51,12 @@
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
+		"@types/request-promise-native": "^1.0.17",
 		"@types/vscode": "^1.41.0",
 		"glob": "^7.1.5",
 		"mocha": "^6.2.2",
-		"typescript": "^3.6.4",
 		"tslint": "^5.20.0",
+		"typescript": "^3.6.4",
 		"vscode-test": "^1.2.2"
 	},
 	"license": "Apache-2.0",
@@ -35,5 +64,9 @@
 		"type": "git",
 		"url": "git@github.com:IBM/vscode-ibmcloud-account.git"
 	},
-	"publisher": "IBM"
+	"publisher": "IBM",
+	"dependencies": {
+		"request": "^2.88.0",
+		"request-promise-native": "^1.0.8"
+	}
 }
