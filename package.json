@@ -62,7 +62,7 @@
 	"license": "Apache-2.0",
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:IBM/vscode-ibmcloud-account.git"
+		"url": "https://github.com/IBM/vscode-ibmcloud-account.git"
 	},
 	"publisher": "IBM",
 	"dependencies": {
