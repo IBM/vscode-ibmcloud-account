@@ -20,7 +20,7 @@
 		"commands": [
 			{
 				"command": "ibmcloud-account.createAccount",
-				"title": "Create an account",
+				"title": "Create a new account",
 				"category": "IBM Cloud"
 			},
 			{
