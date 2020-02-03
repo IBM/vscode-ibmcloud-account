@@ -85,6 +85,11 @@ async function login() {
             label: 'Log in with a federated ID using single sign-on (SSO)',
             description: 'Opens a web browser for authentication',
             function: 'loginWithSSO'
+        },
+        {
+            label: 'Create a new account',
+            description: 'Opens a web browser for registration',
+            function: 'createAccount'
         }
     ];
 
@@ -106,6 +111,8 @@ async function login() {
             return loginWithApiKey();
         case 'loginWithSSO':
             return loginWithSSO();
+        case 'createAccount':
+            return createAccount();
     }
 
 }
