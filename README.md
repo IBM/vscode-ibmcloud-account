@@ -1,5 +1,7 @@
 # vscode-ibmcloud-account
 
+[![Build Status](https://dev.azure.com/IBM-Blockchain/vscode-ibmcloud-account/_apis/build/status/IBM.vscode-ibmcloud-account?branchName=master)](https://dev.azure.com/IBM-Blockchain/vscode-ibmcloud-account/_build/latest?definitionId=4&branchName=master)
+
 The IBM Cloud account extension for Visual Studio Code provides a single IBM Cloud sign-in experience for all other IBM extensions.
 
 The IBM Cloud authentication code in this extension was developed by following the code in the IBM Cloud CLI SDK, available here: https://github.com/IBM-Cloud/ibm-cloud-cli-sdk
