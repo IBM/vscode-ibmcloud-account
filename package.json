@@ -68,5 +68,6 @@
 	"dependencies": {
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.8"
-	}
+	},
+	"icon": "images/IBM_Cloud_BlueTeal_Pos_RGB.png"
 }
