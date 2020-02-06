@@ -71,6 +71,34 @@ async function createAccount() {
 
 async function login() {
 
+    // Login.
+    await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: 'Logging in to IBM Cloud ...'
+    }, async (progress, token) => {
+
+        // Login.
+        const loggedIn = await loginCommon();
+        if (!loggedIn) {
+            return;
+        }
+
+        // Select account.
+        const accountSelected = await selectAccountCommon();
+        if (!accountSelected) {
+            return;
+        }
+
+        // Display a message.
+        const email = await cloudAccount.getEmail();
+        vscode.window.showInformationMessage(`Logged into IBM Cloud as ${email}`);
+
+    });
+
+}
+
+async function loginCommon() {
+
     // Build the quick pick items.
     const items = [
         {
@@ -100,19 +128,29 @@ async function login() {
     });
     if (!item) {
         // User cancelled.
-        return;
+        return false;
+    } else if (item.function === 'createAccount') {
+        // User doesn't have an account and asked to create one.
+        await createAccount();
+        return false;
     }
 
-    // Handle the users choice.
-    switch (item.function) {
-        case 'loginWithUsernameAndPassword':
+    try {
+
+        // Log in using the specified method.
+        if (item.function === 'loginWithUsernameAndPassword'){
             return loginWithUsernameAndPassword();
-        case 'loginWithApiKey':
+        } else if (item.function === 'loginWithApiKey'){
             return loginWithApiKey();
-        case 'loginWithSSO':
+        } else if (item.function === 'loginWithSSO'){
             return loginWithSSO();
-        case 'createAccount':
-            return createAccount();
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        vscode.window.showErrorMessage(error.message);
+        return false;
     }
 
 }
@@ -126,7 +164,7 @@ async function loginWithUsernameAndPassword() {
     });
     if (!username) {
         // User cancelled.
-        return;
+        return false;
     }
 
     // Get the password.
@@ -137,16 +175,11 @@ async function loginWithUsernameAndPassword() {
     });
     if (!password) {
         // User cancelled.
-        return;
+        return false;
     }
 
-    // Log in and select an account.
-    try {
-        await cloudAccount.loginWithUsernameAndPassword(username, password);
-        await vscode.commands.executeCommand('ibmcloud-account.selectAccount');
-    } catch (error) {
-        vscode.window.showErrorMessage(error.message);
-    }
+    // Log in.
+    return cloudAccount.loginWithUsernameAndPassword(username, password);
 
 }
 
@@ -160,16 +193,11 @@ async function loginWithApiKey() {
     });
     if (!apiKey) {
         // User cancelled.
-        return;
+        return false;
     }
 
-    // Log in and select an account.
-    try {
-        await cloudAccount.loginWithApiKey(apiKey);
-        await vscode.commands.executeCommand('ibmcloud-account.selectAccount');
-    } catch (error) {
-        vscode.window.showErrorMessage(error.message);
-    }
+    // Log in.
+    return cloudAccount.loginWithApiKey(apiKey);
 
 }
 
@@ -191,12 +219,7 @@ async function loginWithSSO() {
     }
 
     // Log in and select an account.
-    try {
-        await cloudAccount.loginWithSSO(cb);
-        await vscode.commands.executeCommand('ibmcloud-account.selectAccount');
-    } catch (error) {
-        vscode.window.showErrorMessage(error.message);
-    }
+    return cloudAccount.loginWithSSO(cb);
 
 }
 
@@ -205,6 +228,7 @@ async function logout() {
     // Log out.
     try {
         await cloudAccount.logout();
+        vscode.window.showInformationMessage('Logged out of IBM Cloud');
     } catch (error) {
         vscode.window.showErrorMessage(error.message);
     }
@@ -212,6 +236,28 @@ async function logout() {
 }
 
 async function selectAccount() {
+
+    // Select account.
+    return vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: 'Selecting IBM Cloud account ...'
+    }, async (progress, token) => {
+
+        // Select account.
+        const accountSelected = await selectAccountCommon();
+        if (!accountSelected) {
+            return;
+        }
+
+        // Display a message.
+        const email = await cloudAccount.getEmail();
+        vscode.window.showInformationMessage(`Selected IBM Cloud account ${email}`);
+
+    });
+
+}
+
+async function selectAccountCommon() {
 
     // Callback for below log in method.
     async function cb(accounts: { guid: string, name: string, email: string }[]) {
@@ -239,16 +285,22 @@ async function selectAccount() {
 
     }
 
+    // Log in if not already logged in.
+    let loggedIn = await cloudAccount.loggedIn();
+    if (!loggedIn) {
+        loggedIn = await loginCommon();
+        if (!loggedIn) {
+            return false;
+        }
+    }
+
     // Select an account.
     try {
-        const loggedIn = await cloudAccount.loggedIn();
-        if (!loggedIn) {
-            await login();
-        } else {
-            await cloudAccount.selectAccount(cb);
-        }
+        await cloudAccount.selectAccount(cb);
+        return true;
     } catch (error) {
         vscode.window.showErrorMessage(error.message);
+        return false;
     }
 
 }
