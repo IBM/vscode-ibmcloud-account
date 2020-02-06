@@ -28,7 +28,6 @@ export class CloudAccount extends EventEmitter {
             try {
                 const loggedIn = await this.loggedIn();
                 if (loggedIn) {
-                    console.log('checking tokens');
                     await this.checkTokens();
                 }
             } catch {
@@ -49,6 +48,7 @@ export class CloudAccount extends EventEmitter {
                 username,
                 password
             });
+            return true;
         } finally {
             this.emit('changed');
         }
@@ -64,6 +64,7 @@ export class CloudAccount extends EventEmitter {
                 grant_type: 'urn:ibm:params:oauth:grant-type:apikey',
                 apikey
             });
+            return true;
         } finally {
             this.emit('changed');
         }
@@ -80,12 +81,13 @@ export class CloudAccount extends EventEmitter {
             const passcodeEndpoint = await this.getPasscodeEndpoint();
             const passcode = await cb(passcodeEndpoint);
             if (!passcode) {
-                return;
+                return false;
             }
             await this.loginCommon({
                 grant_type: 'urn:ibm:params:oauth:grant-type:passcode',
                 passcode
             });
+            return true;
         } finally {
             this.emit('changed');
         }
@@ -156,12 +158,13 @@ export class CloudAccount extends EventEmitter {
             } else {
                 selectedAccount = await cb(accounts);
                 if (!selectedAccount) {
-                    return;
+                    return false;
                 }
             }
             await this.store.setAccount(selectedAccount.guid);
             await this.store.setEmail(selectedAccount.email);
             await this.refreshTokens();
+            return true;
         } finally {
             this.emit('changed');
         }
