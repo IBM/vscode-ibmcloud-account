@@ -72,7 +72,7 @@ async function createAccount() {
 async function login() {
 
     // Login.
-    await vscode.window.withProgress({
+    return vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
         title: 'Logging in to IBM Cloud ...'
     }, async (progress, token) => {
@@ -80,18 +80,19 @@ async function login() {
         // Login.
         const loggedIn = await loginCommon();
         if (!loggedIn) {
-            return;
+            return false;
         }
 
         // Select account.
         const accountSelected = await selectAccountCommon();
         if (!accountSelected) {
-            return;
+            return false;
         }
 
         // Display a message.
         const email = await cloudAccount.getEmail();
         vscode.window.showInformationMessage(`Logged into IBM Cloud as ${email}`);
+        return true;
 
     });
 
@@ -246,12 +247,13 @@ async function selectAccount() {
         // Select account.
         const accountSelected = await selectAccountCommon();
         if (!accountSelected) {
-            return;
+            return false;
         }
 
         // Display a message.
         const email = await cloudAccount.getEmail();
         vscode.window.showInformationMessage(`Selected IBM Cloud account ${email}`);
+        return true;
 
     });
 
