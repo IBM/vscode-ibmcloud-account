@@ -4,7 +4,7 @@
 	"description": "The IBM Cloud account extension for Visual Studio Code provides a single IBM Cloud sign-in experience for all other IBM extensions",
 	"version": "1.0.0",
 	"engines": {
-		"vscode": "^1.41.0"
+		"vscode": "^1.38.0"
 	},
 	"categories": [
 		"Other"
@@ -52,7 +52,7 @@
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
 		"@types/request-promise-native": "^1.0.17",
-		"@types/vscode": "^1.41.0",
+		"@types/vscode": "^1.38.0",
 		"glob": "^7.1.5",
 		"mocha": "^7.1.2",
 		"tslint": "^5.20.0",
