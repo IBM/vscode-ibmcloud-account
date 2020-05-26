@@ -3,6 +3,8 @@
  */
 
 import * as vscode from 'vscode';
+import { SecureStoreFactory } from './secure-store-factory';
+import { SecureStore } from './secure-store';
 
 const ACCOUNT_KEY = 'ibmcloud-account-guid';
 const EMAIL_KEY = 'ibmcloud-account-email';
@@ -14,26 +16,12 @@ const REFRESH_TOKEN_ACCOUNT = 'Refresh Token';
  */
 export class CloudAccountStore {
 
-    private keytar: any;
-
     /**
      * Constructor.
      * @param globalState The global state to use.
      */
-    constructor(private globalState: vscode.Memento) {
-        const keytarPaths = [
-            `${vscode.env.appRoot}/node_modules.asar/keytar`,
-            `${vscode.env.appRoot}/node_modules/keytar`,
-        ];
-        for (const keytarPath of keytarPaths) {
-            try {
-                this.keytar = require(keytarPath);
-                return;
-            } catch {
-                // Ignore the error and try the next path.
-            }
-        }
-        throw new Error(`Failed to load keytar module`);
+    constructor(private globalState: vscode.Memento, private secureStore: SecureStore) {
+
     }
 
     /**
@@ -85,8 +73,8 @@ export class CloudAccountStore {
     /**
      * Get the persisted refresh token.
      */
-    public async getRefreshToken(): Promise<string> {
-        return this.keytar.getPassword(SERVICE, REFRESH_TOKEN_ACCOUNT);
+    public async getRefreshToken(): Promise<string | null> {
+        return this.secureStore.getPassword(SERVICE, REFRESH_TOKEN_ACCOUNT);
     }
 
     /**
@@ -94,14 +82,14 @@ export class CloudAccountStore {
      * @param refreshToken The refresh token.
      */
     public async setRefreshToken(refreshToken: string) {
-        await this.keytar.setPassword(SERVICE, REFRESH_TOKEN_ACCOUNT, refreshToken);
+        await this.secureStore.setPassword(SERVICE, REFRESH_TOKEN_ACCOUNT, refreshToken);
     }
 
     /**
      * Delete the persisted refresh token.
      */
     public async deleteRefreshToken() {
-        await this.keytar.deletePassword(SERVICE, REFRESH_TOKEN_ACCOUNT);
+        await this.secureStore.deletePassword(SERVICE, REFRESH_TOKEN_ACCOUNT);
     }
 
 }
