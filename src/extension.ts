@@ -7,6 +7,7 @@ import { CloudAccount } from './cloud-account';
 import { CloudAccountStore } from './cloud-account-store';
 import { URL } from 'url';
 import { CloudAccountApi } from './cloud-account-api';
+import { SecureStoreFactory } from './secure-store-factory';
 
 let cloudAccount: CloudAccount;
 let cloudAccountStore: CloudAccountStore;
@@ -15,7 +16,8 @@ let statusBarItem: vscode.StatusBarItem;
 export async function activate(context: vscode.ExtensionContext) {
 
     // Create classes for IBM Cloud authentication.
-    cloudAccountStore = new CloudAccountStore(context.globalState);
+    const secureStore = await SecureStoreFactory.getSecureStore();
+    cloudAccountStore = new CloudAccountStore(context.globalState, secureStore);
     cloudAccount = new CloudAccount(cloudAccountStore);
 
     // Create the status bar item, update, and show it.

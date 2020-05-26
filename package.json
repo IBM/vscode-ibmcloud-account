@@ -2,7 +2,7 @@
 	"name": "ibmcloud-account",
 	"displayName": "IBM Cloud Account",
 	"description": "The IBM Cloud account extension for Visual Studio Code provides a single IBM Cloud sign-in experience for all other IBM extensions",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -48,6 +48,7 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
+		"@types/fs-extra": "^9.0.1",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
@@ -66,6 +67,8 @@
 	},
 	"publisher": "IBM",
 	"dependencies": {
+		"fs-extra": "^9.0.0",
+		"home-dir": "^1.0.0",
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.8"
 	},

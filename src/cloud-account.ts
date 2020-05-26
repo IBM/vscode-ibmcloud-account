@@ -217,7 +217,8 @@ export class CloudAccount extends EventEmitter {
                 throw new Error('You have not selected an IBM Cloud account to use');
             }
             await this.checkTokens();
-            return this.store.getRefreshToken();
+            const refreshToken = await this.store.getRefreshToken();
+            return refreshToken!;
         } finally {
             this.emit('changed');
         }
