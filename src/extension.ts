@@ -300,8 +300,7 @@ async function selectAccountCommon() {
 
     // Select an account.
     try {
-        await cloudAccount.selectAccount(cb);
-        return true;
+        return await cloudAccount.selectAccount(cb);
     } catch (error) {
         vscode.window.showErrorMessage(error.message);
         return false;
