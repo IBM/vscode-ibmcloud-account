@@ -2,7 +2,7 @@
 	"name": "ibmcloud-account",
 	"displayName": "IBM Cloud Account",
 	"description": "The IBM Cloud account extension for Visual Studio Code provides a single IBM Cloud sign-in experience for all other IBM extensions",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -13,7 +13,8 @@
 		"onCommand:ibmcloud-account.createAccount",
 		"onCommand:ibmcloud-account.login",
 		"onCommand:ibmcloud-account.logout",
-		"onCommand:ibmcloud-account.selectAccount"
+		"onCommand:ibmcloud-account.selectAccount",
+		"onCommand:ibmcloud-account.ping"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -37,8 +38,21 @@
 				"command": "ibmcloud-account.selectAccount",
 				"title": "Select account",
 				"category": "IBM Cloud"
+			},
+			{
+				"command": "ibmcloud-account.ping",
+				"title": "Ping",
+				"category": "IBM Cloud"
 			}
-		]
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "ibmcloud-account.ping",
+					"when": "false"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
