@@ -37,6 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('ibmcloud-account.login', login));
     context.subscriptions.push(vscode.commands.registerCommand('ibmcloud-account.logout', logout));
     context.subscriptions.push(vscode.commands.registerCommand('ibmcloud-account.selectAccount', selectAccount));
+    context.subscriptions.push(vscode.commands.registerCommand('ibmcloud-account.ping', () => { return; }));
 
     // Return the API so other extensions can access it.
     const api: CloudAccountApi = {
