@@ -1,0 +1,43 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * *"
+  create:
+    tags:
+      - "*"
+  workflow_dispatch: {}
+env:
+  DISPLAY: :99.0
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Start Xvfb
+        run: nohup Xvfb :99 -screen 0 1024x768x24 < /dev/null > /dev/null 2>&1 &
+      - name: Use Node.js 12
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - name: Install Visual Studio Code Extensions CLI
+        run: npm install -g vsce
+      - name: Install extension dependencies
+        run: npm ci
+      - name: Audit extension dependencies
+        run: npm audit
+      - name: Run extension tests
+        run: npm test
+      - name: Package extension
+        run: vsce package
