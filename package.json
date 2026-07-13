@@ -1,14 +1,35 @@
 {
 	"name": "ibmcloud-account",
 	"displayName": "IBM Cloud Account",
-	"description": "The IBM Cloud account extension for Visual Studio Code provides a single IBM Cloud sign-in experience for all other IBM extensions",
-	"version": "1.0.7",
+	"description": "Seamlessly connect to IBM Cloud services from VS Code. Single sign-on for all VS Code IBM Cloud extensions with secure credential management.",
+	"version": "2.0.0",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+    "IBM",
+    "IBM Cloud",
+    "cloud",
+    "authentication",
+    "login",
+    "account",
+    "sso",
+    "single sign-on",
+    "api key",
+    "credentials",
+    "cloud services",
+    "devops",
+    "deployment",
+    "ibmcloud",
+    "cloud platform",
+    "account manager",
+	"Cloud Build",
+	"snippet",
+	"Cloud Functions"
+  ],
 	"activationEvents": [
 		"onCommand:ibmcloud-account.createAccount",
 		"onCommand:ibmcloud-account.login",
