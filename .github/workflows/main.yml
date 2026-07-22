@@ -24,13 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Start Xvfb
         run: nohup Xvfb :99 -screen 0 1024x768x24 < /dev/null > /dev/null 2>&1 &
-      - name: Use Node.js 12
-        uses: actions/setup-node@v2
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 12
+          node-version: 20
       - name: Install Visual Studio Code Extensions CLI
         run: npm install -g vsce
       - name: Install extension dependencies
