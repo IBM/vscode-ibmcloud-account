@@ -153,7 +153,7 @@ async function loginCommon() {
         }
 
     } catch (error) {
-        vscode.window.showErrorMessage(error.message);
+        vscode.window.showErrorMessage(error instanceof Error ? error.message : String(error));
         return false;
     }
 
@@ -234,7 +234,7 @@ async function logout() {
         await cloudAccount.logout();
         vscode.window.showInformationMessage('Logged out of IBM Cloud');
     } catch (error) {
-        vscode.window.showErrorMessage(error.message);
+        vscode.window.showErrorMessage(error instanceof Error ? error.message : String(error));
     }
 
 }
@@ -303,7 +303,7 @@ async function selectAccountCommon() {
     try {
         return await cloudAccount.selectAccount(cb);
     } catch (error) {
-        vscode.window.showErrorMessage(error.message);
+        vscode.window.showErrorMessage(error instanceof Error ? error.message : String(error));
         return false;
     }
 
