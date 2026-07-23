@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as rp from 'request-promise-native';
+import axios from 'axios';
 import { URL } from 'url';
 import { CloudAccountStore } from './cloud-account-store';
 import { EventEmitter } from 'events';
@@ -130,17 +130,14 @@ export class CloudAccount extends EventEmitter {
             let url = new URL('/coe/v2/accounts', ACCOUNT_MANAGEMENT_URL);
             const resources = [];
             while (url) {
-                const response = await rp.get(url.toString(), {
-                    auth: {
-                        bearer: accessToken
-                    },
-                    json: true
+                const response = await axios.get(url.toString(), {
+                    headers: { Authorization: `Bearer ${accessToken}` }
                 });
-                for (const resource of response.resources) {
+                for (const resource of response.data.resources) {
                     resources.push(resource);
                 }
-                if (response.next_url) {
-                    url = new URL(response.next_url);
+                if (response.data.next_url) {
+                    url = new URL(response.data.next_url);
                 } else {
                     break;
                 }
@@ -242,7 +239,8 @@ export class CloudAccount extends EventEmitter {
 
     private async getOpenIDConfiguration() {
         const url = new URL('/identity/.well-known/openid-configuration', IAM_URL);
-        return await rp.get(url.toString(), { json: true });
+        const response = await axios.get(url.toString());
+        return response.data;
     }
 
     private async getTokenEndpoint() {
@@ -257,27 +255,26 @@ export class CloudAccount extends EventEmitter {
 
     private async loginCommon(form: object, refresh: boolean = false) {
         const tokenEndpoint = await this.getTokenEndpoint();
-        const response = await rp.post(tokenEndpoint.toString(), {
-            auth: {
-                user: 'bx',
-                pass: 'bx',
-                sendImmediately: true
-            },
-            form,
-            json: true,
-            resolveWithFullResponse: true,
-            simple: false
-        });
-        if (!/^2/.test('' + response.statusCode)) {
-            if (response.body.errorCode) {
-                throw new Error(`${response.body.errorCode}: ${response.body.errorDetails || response.body.errorMessage}`);
-            } else {
-                throw new Error(`IBM Cloud IAM token endpoint returned HTTP ${response.statusCode}`);
+        const params = new URLSearchParams();
+        for (const [key, value] of Object.entries(form)) {
+            if (value !== undefined && value !== null) {
+                params.append(key, String(value));
             }
         }
-        this.accessToken = response.body.access_token;
-        this.expiration = response.body.expiration;
-        const refreshToken = response.body.refresh_token;
+        const response = await axios.post(tokenEndpoint.toString(), params, {
+            auth: { username: 'bx', password: 'bx' },
+            validateStatus: () => true
+        });
+        if (!/^2/.test('' + response.status)) {
+            if (response.data.errorCode) {
+                throw new Error(`${response.data.errorCode}: ${response.data.errorDetails || response.data.errorMessage}`);
+            } else {
+                throw new Error(`IBM Cloud IAM token endpoint returned HTTP ${response.status}`);
+            }
+        }
+        this.accessToken = response.data.access_token;
+        this.expiration = response.data.expiration;
+        const refreshToken = response.data.refresh_token;
         if (!refresh) {
             await this.store.deleteAccount();
             await this.store.deleteEmail();
