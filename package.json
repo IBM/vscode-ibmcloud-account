@@ -4,7 +4,8 @@
 	"description": "The IBM Cloud account extension for Visual Studio Code provides a single IBM Cloud sign-in experience for all other IBM extensions",
 	"version": "1.0.7",
 	"engines": {
-		"vscode": "^1.38.0"
+		"vscode": "^1.95.0",
+		"node": ">=22"
 	},
 	"categories": [
 		"Other"
@@ -58,21 +59,26 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
+		"lint": "eslint src --ext .ts",
 		"pretest": "npm run compile",
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/fs-extra": "^9.0.1",
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.7",
-		"@types/node": "^12.11.7",
-		"@types/request-promise-native": "^1.0.17",
-		"@types/vscode": "^1.38.0",
-		"glob": "^7.1.5",
-		"mocha": "^7.1.2",
-		"tslint": "^5.20.0",
-		"typescript": "^3.6.4",
-		"vscode-test": "^1.2.2"
+		"@types/fs-extra": "^11.0.4",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^20.0.0",
+		"@types/vscode": "^1.95.0",
+		"@typescript-eslint/eslint-plugin": "^8.65.0",
+		"@typescript-eslint/parser": "^8.65.0",
+		"eslint": "^8.57.1",
+		"glob": "^11.0.4",
+		"mocha": "^11.7.6",
+		"typescript": "^5.8.3",
+		"@vscode/test-electron": "^3.0.0"
+	},
+	"overrides": {
+		"diff": "^9.0.0",
+		"serialize-javascript": "^7.0.0"
 	},
 	"license": "Apache-2.0",
 	"repository": {
@@ -81,10 +87,9 @@
 	},
 	"publisher": "IBM",
 	"dependencies": {
-		"fs-extra": "^9.0.0",
-		"home-dir": "^1.0.0",
-		"request": "^2.88.0",
-		"request-promise-native": "^1.0.8"
+		"axios": "^1.18.1",
+		"fs-extra": "^11.3.6",
+		"home-dir": "^1.0.0"
 	},
 	"icon": "images/IBM_Cloud_BlueTeal_Pos_RGB.png"
 }
