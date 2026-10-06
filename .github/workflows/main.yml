@@ -18,6 +18,8 @@ on:
   workflow_dispatch: {}
 env:
   DISPLAY: :99.0
+permissions:
+  contents: read
 jobs:
   build:
     name: Build
@@ -37,6 +39,8 @@ jobs:
         run: npm ci
       - name: Audit extension dependencies
         run: npm audit
+      - name: Lint
+        run: npm run lint
       - name: Run extension tests
         run: npm test
       - name: Package extension
