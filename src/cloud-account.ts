@@ -131,7 +131,9 @@ export class CloudAccount extends EventEmitter {
             const resources = [];
             while (url) {
                 const response = await axios.get(url.toString(), {
-                    headers: { Authorization: `Bearer ${accessToken}` }
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
                 });
                 for (const resource of response.data.resources) {
                     resources.push(resource);
@@ -256,13 +258,14 @@ export class CloudAccount extends EventEmitter {
     private async loginCommon(form: object, refresh: boolean = false) {
         const tokenEndpoint = await this.getTokenEndpoint();
         const params = new URLSearchParams();
-        for (const [key, value] of Object.entries(form)) {
-            if (value !== undefined && value !== null) {
-                params.append(key, String(value));
-            }
+        for (const [key, value] of Object.entries(form as Record<string, string>)) {
+            params.append(key, value);
         }
         const response = await axios.post(tokenEndpoint.toString(), params, {
-            auth: { username: 'bx', password: 'bx' },
+            auth: {
+                username: 'bx',
+                password: 'bx'
+            },
             validateStatus: () => true
         });
         if (!/^2/.test('' + response.status)) {
