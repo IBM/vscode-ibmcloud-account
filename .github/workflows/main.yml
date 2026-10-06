@@ -18,6 +18,8 @@ on:
   workflow_dispatch: {}
 env:
   DISPLAY: :99.0
+permissions:
+  contents: read
 jobs:
   build:
     name: Build
